@@ -28,11 +28,29 @@ public class Solution {
             String ls2 = s2.substring(0,i), rs2 = s2.substring(i);
             String l2s2 = s2.substring(0, len1 -i), r2s2 = s2.substring(len1-i);
            
-            if((isScramble(ls1, ls2) && isScramble(rs1, rs2)) ||
-                (isScramble(ls1, r2s2) && isScramble(rs1, l2s2))) {
+            if((isAnagram(ls1, ls2) && isAnagram(rs1, rs2) && isScramble(ls1, ls2) && isScramble(rs1, rs2)) ||
+                (isAnagram(ls1, r2s2) && isAnagram(rs1, l2s2) && isScramble(ls1, r2s2) && isScramble(rs1, l2s2))) {
                 return true;
             }
         }
         return false;
+    }
+
+    boolean isAnagram(String s1, String s2) {
+        if (s1 == null && s2 == null) return true;
+        if (s1 == null || s2 == null) return false;
+        int len1 = s1.length(), len2 = s2.length();
+        if (len1 != len2) return false;
+        int[] histo = new int[26];
+        for (int i = 0; i< 26; i++) histo[i] = 0;
+        for (int i = 0; i< len1; i++) {
+            histo[s1.charAt(i)-'a'] ++;
+            histo[s2.charAt(i)-'a'] --;
+        }
+       
+        for (int i = 0; i< 26; i++) {
+            if (histo[i] != 0) return false;
+        }
+        return true;
     }
 }
