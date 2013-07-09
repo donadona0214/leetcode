@@ -10,41 +10,27 @@ Note:
 Bonus point if you are able to do this using only O(n) extra space, where n is the total number of rows in the triangle.
 */
 
-public class Solution {
-    public class Node {
-        public int x, y, total;
-      
-        public Node(int x, int y, int total) {
-            this.x = x;
-            this.y = y;
-            this.total = total;
-        }
-    }
-  
+
+public class Solution { 
     public int minimumTotal(ArrayList<ArrayList<Integer>> triangle) {
         // Start typing your Java solution below
         // DO NOT write main() function
         // Use DFS to calculate the min path
-        Stack<Node> s = new Stack<Node>();
-        if (triangle == null || triangle.isEmpty() || triangle.get(0).isEmpty()) {
-            return Integer.MIN_VALUE;
-        }
-      
         int depth = triangle.size();
-        s.push(new Node(0,0, triangle.get(0).get(0)));
-        int minTotal = Integer.MAX_VALUE;
-        while (!s.isEmpty()) {
-            Node node = s.pop();
-            if (node.x >= depth -1 ) {
-                if (minTotal > node.total) minTotal = node.total;
-            } else {
-                int x = node.x, y = node.y, total = node.total;
-                Node left = new Node(x+1, y, total + triangle.get(x+1).get(y));
-                Node right = new Node(x+1, y+1, total + triangle.get(x+1).get(y+1));
-                s.push(right);
-                s.push(left);
+        if (depth == 0) return 0;
+       
+        int[] minSums = new int[depth];
+        for (int i = 0; i < triangle.get(depth-1).size(); i++) {
+            minSums[i] = triangle.get(depth-1).get(i);
+        }
+       
+        for (int d = depth - 2; d >= 0; d--) {
+            for (int i = 0; i < triangle.get(d).size(); i++) {
+                minSums[i] = triangle.get(d).get(i)
+                    + Math.min(minSums[i], minSums[i+1]);
             }
         }
-        return minTotal;
+       
+        return minSums[0];
     }
 }
