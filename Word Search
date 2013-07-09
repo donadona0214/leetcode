@@ -1,0 +1,68 @@
+/*
+Given a 2D board and a word, find if the word exists in the grid.
+The word can be constructed from letters of sequentially adjacent cell, where "adjacent" cells are those horizontally or vertically neighboring. The same letter cell may not be used more than once.
+For example,
+Given board =
+[  ["ABCE"],  ["SFCS"],  ["ADEE"]]word = "ABCCED", -> returns true,
+word = "SEE", -> returns true,
+word = "ABCB", -> returns false.
+*/
+
+public class Solution {
+    public boolean exist(char[][] board, String word) {
+        // Start typing your Java solution below
+        // DO NOT write main() function
+        if (word == null) return true;
+        int len = word.length();
+        if (len == 0) return true;
+       
+        if (board == null) return false;
+        int m = board.length;
+        if (m == 0) return false;
+        int n = board[0].length;
+       
+        boolean[][] hits = new boolean[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                hits[i][j] = false;
+            }
+        }
+       
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == word.charAt(0)) {
+                    hits[i][j] = true;
+                    if (existHelper(board, word.substring(1), hits, i, j)) {
+                        return true;
+                    }
+                    hits[i][j] = false;
+                }
+            }
+        }
+        return false;
+    }
+   
+    public boolean existHelper(char[][] board, String word, boolean[][] hits, int p, int q) {
+        int len = word.length();
+        if (len == 0) return true;
+       
+        int m = board.length;
+        int n = board[0].length;
+       
+        int[][] index = {{0, -1}, {0, 1}, {-1, 0}, {1,0}};
+       
+        for (int i = 0; i < index.length; i++) {
+            int x = p + index[i][0], y= q + index[i][1];
+            if (x >= m || x < 0 || y >= n || y < 0) continue;
+            if (hits[x][y] || board[x][y] != word.charAt(0)) continue;
+           
+            hits[x][y] = true;
+            if (existHelper(board, word.substring(1), hits, x, y)) {
+                return true;
+            }   
+            hits[x][y] = false;
+        }
+
+        return false;
+    }
+}
